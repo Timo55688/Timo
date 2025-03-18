@@ -22,6 +22,7 @@ import jakarta.servlet.http.Part;
 		maxRequestSize = 1024 * 1024 * 50 // 50MB
 )
 
+@WebServlet("/food/food.do")
 public class FoodServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
