@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class PhotoVO {
     private Integer photoId;
     private Integer storeId;
-    private String photoSrc;
+    private byte[] photoSrc;
     private Timestamp updateTime;
     
     public Integer getPhotoId() {
@@ -20,10 +20,10 @@ public class PhotoVO {
     public void setStoreId(Integer storeId) {
         this.storeId = storeId;
     }
-    public String getPhotoSrc() {
+    public byte[] getPhotoSrc() {
         return photoSrc;
     }
-    public void setPhotoSrc(String photoSrc) {
+    public void setPhotoSrc(byte[] photoSrc) {
         this.photoSrc = photoSrc;
     }
     public Timestamp getUpdateTime() {

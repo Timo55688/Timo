@@ -14,7 +14,7 @@ public class FoodTypeJDBCDAO implements FoodTypeDAOinterface {
 	String userid = "root";
 	String passwd = "123456";
 	private static final String INSERT_STMT = "INSERT INTO foodType (storeId, type) VALUES (?, ?)";
-	private static final String UPDATE = "UPDATE foodType set storeId=?,type=? where foodTypeId = ?";
+	private static final String UPDATE = "UPDATE foodType set type=? where foodTypeId = ?";
 	private static final String DELETE = "DELETE FROM foodType where foodTypeId= ?";
 	private static final String GET_ONE_STMT = "SELECT foodTypeId,storeId,type FROM foodType where foodTypeId = ?";
 	private static final String GET_ALL_STMT = "SELECT foodTypeId,storeId,type FROM foodType order by foodTypeId";
@@ -66,9 +66,9 @@ public class FoodTypeJDBCDAO implements FoodTypeDAOinterface {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(UPDATE);
-			pstmt.setInt(1, foodType.getStoreId());
-			pstmt.setString(2, foodType.getType());
-			pstmt.setInt(3, foodType.getFoodTypeId());
+//			pstmt.setInt(1, foodType.getStoreId());
+			pstmt.setString(1, foodType.getType());
+			pstmt.setInt(2, foodType.getFoodTypeId());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -183,7 +183,7 @@ public class FoodTypeJDBCDAO implements FoodTypeDAOinterface {
 
 	public List<FoodTypeVO> getAll() {
 		List<FoodTypeVO> list = new ArrayList<FoodTypeVO>();
-		FoodTypeVO ftVO = null;
+		FoodTypeVO foodTypeVO = null;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -195,11 +195,11 @@ public class FoodTypeJDBCDAO implements FoodTypeDAOinterface {
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				ftVO = new FoodTypeVO();
-				ftVO.setFoodTypeId(rs.getInt("foodTypeId"));
-				ftVO.setStoreId(rs.getInt("storeId"));
-				ftVO.setType(rs.getString("type"));
-				list.add(ftVO);
+				foodTypeVO = new FoodTypeVO();
+				foodTypeVO.setFoodTypeId(rs.getInt("foodTypeId"));
+				foodTypeVO.setStoreId(rs.getInt("storeId"));
+				foodTypeVO.setType(rs.getString("type"));
+				list.add(foodTypeVO);
 			}
 
 		} catch (ClassNotFoundException e) {
@@ -215,17 +215,17 @@ public class FoodTypeJDBCDAO implements FoodTypeDAOinterface {
 	public static void main(String[] args) {
 
 		FoodTypeJDBCDAO dao = new FoodTypeJDBCDAO();
-		FoodTypeVO ftVO1 = new FoodTypeVO();
+		FoodTypeVO foodTypeVO = new FoodTypeVO();
 
 		// insert
-		ftVO1.setStoreId(1);
-		ftVO1.setType("葷食");
-		dao.insert(ftVO1);
+		foodTypeVO.setStoreId(1);
+		foodTypeVO.setType("葷食");
+		dao.insert(foodTypeVO);
 		System.out.print("上傳成功");
 
 		// update
 		FoodTypeVO ftVO3 = new FoodTypeVO();
-		ftVO3.setStoreId(6);
+//		ftVO3.setStoreId(6);
 		ftVO3.setType("大肉");
 		ftVO3.setFoodTypeId(2);
 		dao.update(ftVO3);

@@ -37,7 +37,7 @@ public class FoodServlet extends HttpServlet {
 
 			List<String> errorMsg = new LinkedList<String>();
 			req.setAttribute("errorMsg", errorMsg);
-			
+
 			String str = req.getParameter("foodId");
 			if (str == null || (str.trim()).length() == 0) {
 				errorMsg.add("請輸入餐點編號");
@@ -100,6 +100,7 @@ public class FoodServlet extends HttpServlet {
 			req.setAttribute("errorMsg", errorMsg);
 
 			Integer foodId = Integer.valueOf(req.getParameter("foodId").trim());
+			
 			String name = req.getParameter("name");
 			String nameReg = "^(?! )[ \u4e00-\u9fa5a-zA-Z0-9_]+(?<! )$";
 			if (name == null || name.trim().length() == 0) {
@@ -111,11 +112,11 @@ public class FoodServlet extends HttpServlet {
 			java.sql.Timestamp createdTime = null;
 			try {
 				if (createdTime == null) {
-				    FoodService foodSvc = new FoodService();
-				    FoodVO existingTime = foodSvc.getOneFood(foodId); // 查詢資料庫
-				    if (existingTime != null && existingTime.getPhoto() != null) {
-				        createdTime = existingTime.getCreatedTime(); // 使用資料庫的圖片
-				    }
+					FoodService foodSvc = new FoodService();
+					FoodVO existingTime = foodSvc.getOneFood(foodId); // 查詢資料庫
+					if (existingTime != null) {
+						createdTime = existingTime.getCreatedTime(); 
+					}
 				}
 			} catch (IllegalArgumentException e) {
 				createdTime = new java.sql.Timestamp(System.currentTimeMillis());
@@ -142,35 +143,35 @@ public class FoodServlet extends HttpServlet {
 			String photo = null;
 
 			try {
-				 
+
 				Part filePart = req.getPart("photo"); // name="photo" 對應 JSP 的 <input type="file">
-				String fileName = filePart.getSubmittedFileName(); 
-				
+				String fileName = filePart.getSubmittedFileName();
+
 				if (fileName != null && !fileName.trim().isEmpty()) {
-					
+
 					String uploadPath = getServletContext().getRealPath("/") + "images_uploaded/";
 					File uploadDir = new File(uploadPath);
 					if (!uploadDir.exists()) {
-						uploadDir.mkdirs(); 
+						uploadDir.mkdirs();
 					}
 
 					String newFilePath = uploadPath + fileName;
-					filePart.write(newFilePath); 
+					filePart.write(newFilePath);
 
-					photo = "images_uploaded/" + fileName; 
+					photo = "images_uploaded/" + fileName;
 				} else {
 					if (photo == null) {
-					    FoodService foodSvc = new FoodService();
-					    FoodVO existingFood = foodSvc.getOneFood(foodId); 
-					    if (existingFood != null && existingFood.getPhoto() != null) {
-					        photo = existingFood.getPhoto();
-					    }
+						FoodService foodSvc = new FoodService();
+						FoodVO existingFood = foodSvc.getOneFood(foodId);
+						if (existingFood != null && existingFood.getPhoto() != null) {
+							photo = existingFood.getPhoto();
+						}
 					}
 				}
 			} catch (Exception e) {
 				errorMsg.add("圖片上傳失敗：" + e.getMessage());
 			}
-			
+
 			System.out.println(photo);
 
 			Integer cost = null;
@@ -238,30 +239,27 @@ public class FoodServlet extends HttpServlet {
 				errorMsg.add("數量請填數字");
 			}
 
-			
-			String photo = null; 
+			String photo = null;
 			try {
-				Part filePart = req.getPart("photo"); 
-				String fileName = filePart.getSubmittedFileName(); 
+				Part filePart = req.getPart("photo");
+				String fileName = filePart.getSubmittedFileName();
 
 				if (fileName != null && !fileName.trim().isEmpty()) {
 					// 確保上傳目錄存在
 					String uploadPath = getServletContext().getRealPath("/") + "images_uploaded/";
 					File uploadDir = new File(uploadPath);
 					if (!uploadDir.exists()) {
-						uploadDir.mkdirs(); 
+						uploadDir.mkdirs();
 					}
 
-					
 					String newFilePath = uploadPath + fileName;
 					filePart.write(newFilePath);
 
-					
 					photo = "images_uploaded/" + fileName;
-					
+
 				} else {
-			        errorMsg.add("請上傳圖片");
-			    }
+					errorMsg.add("請上傳圖片");
+				}
 			} catch (Exception e) {
 				errorMsg.add("圖片上傳失敗：" + e.getMessage());
 			}
