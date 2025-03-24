@@ -16,8 +16,8 @@ public class PhotoJDBCDAO implements PhotoDAOInterface{
 	String userid = "root";
 	String passwd = "123456";
 	
-	private static final String INSERT_STMT = "INSERT INTO photo (storeId,photoSrc,updateTime) VALUES (?, ?,?)";
-	private static final String UPDATE = "UPDATE photo set storeId=?,photoSrc=?,updateTime=? where photoId = ?";
+	private static final String INSERT_STMT = "INSERT INTO photo (storeId,photoSrc,updateTime) VALUES (?, ?,now())";
+	private static final String UPDATE = "UPDATE photo set storeId=?,photoSrc=? where photoId = ?";
 	private static final String DELETE = "DELETE FROM photo where photoId= ?";
 	private static final String GET_ONE_STMT = "SELECT photoId,storeId,photoSrc,updateTime FROM photo where photoId = ?";
 	private static final String GET_ALL_STMT = "SELECT photoId, storeId, photoSrc, updateTime FROM photo ORDER BY photoId";
@@ -32,8 +32,8 @@ public class PhotoJDBCDAO implements PhotoDAOInterface{
 			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(INSERT_STMT);
 			pstmt.setInt(1, photoVO.getStoreId());
-			pstmt.setString(2, photoVO.getPhotoSrc());
-			pstmt.setTimestamp(3, photoVO.getUpdateTime());
+			pstmt.setBytes(2, photoVO.getPhotoSrc());
+//			pstmt.setTimestamp(3, photoVO.getUpdateTime());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -71,9 +71,8 @@ public class PhotoJDBCDAO implements PhotoDAOInterface{
 			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(UPDATE);
 			pstmt.setInt(1, photoVO.getStoreId());
-			pstmt.setString(2, photoVO.getPhotoSrc());
-			pstmt.setTimestamp(3, photoVO.getUpdateTime());
-			pstmt.setInt(4, photoVO.getPhotoId());
+			pstmt.setBytes(2, photoVO.getPhotoSrc());
+			pstmt.setInt(3, photoVO.getPhotoId());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -159,7 +158,7 @@ public class PhotoJDBCDAO implements PhotoDAOInterface{
 				photoVO = new PhotoVO();
 				photoVO.setPhotoId(rs.getInt("photoId"));
 				photoVO.setStoreId(rs.getInt("storeId"));
-				photoVO.setPhotoSrc(rs.getString("photoSrc"));
+				photoVO.setPhotoSrc(rs.getBytes("photoSrc"));
 				photoVO.setUpdateTime(rs.getTimestamp("updateTime"));
 				
 			}
@@ -209,7 +208,7 @@ public class PhotoJDBCDAO implements PhotoDAOInterface{
 				ptVO = new PhotoVO();
 				ptVO.setPhotoId(rs.getInt("photoId"));
 				ptVO.setStoreId(rs.getInt("storeId"));
-				ptVO.setPhotoSrc(rs.getString("photoSrc"));
+				ptVO.setPhotoSrc(rs.getBytes("photoSrc"));
 				ptVO.setUpdateTime(rs.getTimestamp("updateTime"));
 				list.add(ptVO);
 			}
