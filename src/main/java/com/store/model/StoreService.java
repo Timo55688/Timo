@@ -4,29 +4,25 @@ import java.util.List;
 
 public class StoreService {
 
-    private StoreDAOInterface dao;
+    private StoreDAO dao;
 
     public StoreService() {
-        dao = new StoreJDBCDAO();
+        dao = new StoreDAO();
     }
 
-    // 新增店家
-    public void addStore(StoreVO storeVO) {
+    public StoreVO addStore(StoreVO storeVO) {
         dao.insert(storeVO);
+        return storeVO;
     }
 
-    // 修改店家
-//    public StoreVO updateStore(StoreVO storeVO) {
-//        dao.update(storeVO);
-//        return storeVO;
-//    }
+    public StoreVO updateStore(Integer storeId, String name, String managerName, String email,
+            String password, String phoneNum, String guiNum, String businessRegNum,
+            Integer opStat, String opTime, String pickTime, String lastOrder,
+            String closeTime, String address, String county, String district,
+            Integer postalCode) {
 
-    // 修改店家（可選用另一版：傳參數）
-    public StoreVO updateStore(Integer storeId, String name, String managerName, String email, String password,
-                               String phoneNum, String guiNum, String businessRegNum,
-                               Integer opStat, String opTime, String pickTime,
-                               String lastOrder, String closeTime, String address, String county,
-                               String district, Integer postalCode) {
+        // 從 DB 取得原始資料
+        StoreVO original = dao.findByPrimaryKey(storeId);
 
         StoreVO storeVO = new StoreVO();
         storeVO.setStoreId(storeId);
@@ -37,9 +33,6 @@ public class StoreService {
         storeVO.setPhoneNum(phoneNum);
         storeVO.setGuiNum(guiNum);
         storeVO.setBusinessRegNum(businessRegNum);
-//        storeVO.setReviewed(reviewed);
-//        storeVO.setPoints(points);
-//        storeVO.setAccStat(accStat);
         storeVO.setOpStat(opStat);
         storeVO.setOpTime(opTime);
         storeVO.setPickTime(pickTime);
@@ -49,25 +42,28 @@ public class StoreService {
         storeVO.setCounty(county);
         storeVO.setDistrict(district);
         storeVO.setPostalCode(postalCode);
-//        storeVO.setStarNum(starNum);
-//        storeVO.setVisitorsNum(visitorsNum);
+
+        // 保留原本未修改的欄位值
+        storeVO.setPoints(original.getPoints());
+        storeVO.setAccStat(original.getAccStat());
+        storeVO.setRegTime(original.getRegTime());
+        storeVO.setReviewed(original.getReviewed());
+        storeVO.setStarNum(original.getStarNum());
+        storeVO.setVisitorsNum(original.getVisitorsNum());
 
         dao.update(storeVO);
         return storeVO;
     }
 
-    // 查一筆
+    public void deleteStore(Integer storeId) {
+        dao.delete(storeId);
+    }
+
     public StoreVO getOneStore(Integer storeId) {
         return dao.findByPrimaryKey(storeId);
     }
 
-    // 查全部
     public List<StoreVO> getAll() {
         return dao.getAll();
-    }
-
-    // 刪除
-    public void deleteStore(Integer storeId) {
-        dao.delete(storeId);
     }
 }
