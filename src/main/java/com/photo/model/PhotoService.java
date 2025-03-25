@@ -7,10 +7,9 @@ public class PhotoService {
     private PhotoDAOInterface dao;
 
     public PhotoService() {
-        dao = new PhotoJDBCDAO();
+        dao = new PhotoDAO(); // Hibernate 版本
     }
 
-    // 新增
     public PhotoVO addPhoto(Integer storeId, byte[] photoSrc) {
         PhotoVO photoVO = new PhotoVO();
         photoVO.setStoreId(storeId);
@@ -19,7 +18,6 @@ public class PhotoService {
         return photoVO;
     }
 
-    // 修改
     public PhotoVO updatePhoto(Integer photoId, Integer storeId, byte[] photoSrc, java.sql.Timestamp updateTime) {
         PhotoVO photoVO = new PhotoVO();
         photoVO.setPhotoId(photoId);
@@ -30,18 +28,15 @@ public class PhotoService {
         return photoVO;
     }
 
-    // 刪除
     public void deletePhoto(Integer photoId) {
         dao.delete(photoId);
     }
 
-    // 查一筆
     public PhotoVO getOnePhoto(Integer photoId) {
         return dao.findByPrimaryKey(photoId);
     }
 
-    // 查全部
     public List<PhotoVO> getAll() {
         return dao.getAll();
     }
-}
+} 
